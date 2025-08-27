@@ -69,7 +69,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <div className="flex items-center h-12">
                     <Link to="/" className="flex items-center space-x-2 cursor-pointer">
-                        <GradientText>Work-in-Progress</GradientText>
+                        <GradientText>NEXTxLoadout</GradientText>
                     </Link>
                 </div>
 
