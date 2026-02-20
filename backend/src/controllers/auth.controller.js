@@ -120,7 +120,9 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error while registering the user");
     }
 
-    return res.status(201).send(new ApiResponse(201, isUserCreated, "✅ User registered successfully"));
+    return res
+        .status(201)
+        .send(new ApiResponse(201, isUserCreated, "✅ User registered successfully"));
 });
 
 

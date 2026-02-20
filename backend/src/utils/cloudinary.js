@@ -33,7 +33,7 @@ const uploadOnCloudinary = async (localFilePath, folder = "") => {
             console.log("🧹  Local file deleted after successful upload.");
         }
 
-        return result;
+        return result.secure_url;
 
     } catch (error) {
         console.error("❌ Cloudinary upload failed:", error.message);

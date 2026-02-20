@@ -34,7 +34,7 @@ export const setupAgent = async () => {
     llm,
     {
       agentType: 'zero-shot-react-description',
-      verbose: true,
+      verbose: false,
     }
   );
   return executor;
