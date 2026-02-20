@@ -107,6 +107,7 @@ const createProduct = asyncHandler(async (req, res) => {
             keywordsEmbedding: embedding
         }
     });
+    console.log("Created new product:", newProduct.name);
 
     return res.status(201).json({
         message: "Product created successfully",
@@ -217,7 +218,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     };
 
     await product.save();
-
+    console.log("Updated product:", product.name);
+    
     return res.status(200).json({
         message: "Product updated successfully",
         product: product
@@ -282,6 +284,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
         .limit(Number(limit));
 
     const totalProducts = await Product.countDocuments(queryObject);
+    console.log(`Fetched products - Page: ${page}, Limit: ${limit}, Total Products: ${totalProducts}`);
 
     return res
         .status(200)
@@ -309,7 +312,8 @@ const getProductBySlug = asyncHandler(async (req, res) => {
     if (!product) {
         throw new ApiError(404, "Product not found");
     }
-    // console.log("Fetched product by slug:", product);
+    console.log("Fetched product by slug:", product.name);
+
     return res
         .status(200)
         .json(new ApiResponse(200, product, "Product fetched successfully").toJSON());
@@ -325,7 +329,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     const { productId } = req.params;
 
     const deletedProduct = await Product.findByIdAndDelete(productId);
-    console.log("Deleted product:", deletedProduct);
+    console.log("Deleted product:", deletedProduct.name);
 
     if (!deletedProduct) {
         throw new ApiError(404, "Product not found or already deleted");
@@ -451,7 +455,7 @@ const getProductReviews = asyncHandler(async (req, res) => {
     if (!product) {
         throw new ApiError(404, "Product not found");
     }
-    console.log(`Fetched reviews for product: ${product.slug} total reviews: ${product.reviews.length}`);
+    console.log(`Fetched reviews for product: ${product.name} | Product ID: ${product._id} | Total reviews: ${product.reviews.length}`);
     return res.status(200).json(
         new ApiResponse(200, { reviews: product.reviews, rating: product.rating, reviewsCount: product.reviewsCount }, "Reviews fetched")
     );

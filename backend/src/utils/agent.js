@@ -8,7 +8,7 @@ dotenv.config();
 
 const mongoTool = new DynamicTool({
   name: 'queryMongo',
-  description: 'Query MongoDB. Input must be a valid MongoDB query as JSON string.',
+  description: 'Query MongoDB. After that return results in natural language.',
   func: async (input) => {
     try {
       const query = JSON.parse(input);
@@ -24,8 +24,8 @@ const mongoTool = new DynamicTool({
 
 const llm = new ChatGroq({
   apiKey: process.env.GROQ_API_KEY,
-  model: 'llama3-70b-8192',
-  temperature: 0,
+  model: 'llama-3.3-70b-versatile',
+  temperature: 0.1,
 });
 
 export const setupAgent = async () => {

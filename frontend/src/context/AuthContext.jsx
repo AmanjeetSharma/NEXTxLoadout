@@ -102,8 +102,6 @@ const AuthProvider = ({ children }) => {
                 duration: 6000,
                 position: "bottom-left",
             });
-
-
             throw err;
         }
     };
@@ -111,7 +109,7 @@ const AuthProvider = ({ children }) => {
     const loginWithGoogle = async (tokenId, device) => {
         try {
             const res = await axiosInstance.post("oauth2/google-login", { tokenId, device });
-            await fetchProfile(); // Will refresh user's profile after login
+            await fetchProfile();
             toast.success("Google login successful!", { duration: 3000, position: "bottom-left" });
         } catch (err) {
             console.error("❌ Google login error:", err);
