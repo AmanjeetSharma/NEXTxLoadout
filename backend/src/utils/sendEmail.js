@@ -1,43 +1,50 @@
-import nodemailer from "nodemailer";
+import axios from "axios";
 
 /**
- * Brevo SMTP Transporter
- */
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST, // smtp-relay.brevo.com
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false, // true only if using port 465
-    auth: {
-        user: process.env.SMTP_USER, // a3030d001@smtp-brevo.com
-        pass: process.env.SMTP_PASS, // SMTP key (NOT Brevo password)
-    },
-});
-
-/**
- * Send email using Brevo SMTP
- * @param {string} to - Recipient email address
- * @param {string} subject - Email subject
- * @param {string} content - Email content (text or HTML)
- * @param {boolean} [isHtml=false] - Whether the content is HTML
+ * Send email using Brevo REST API (Axios version)
  */
 const sendEmail = async (to, subject, content, isHtml = false) => {
-    console.log("sending via Brevo")
     try {
-        const info = await transporter.sendMail({
-            from: process.env.SMTP_FROM,
-            to,
-            subject,
-            [isHtml ? "html" : "text"]: content,
-        });
+        console.log(process.env.BREVO_API_KEY ? "Brevo API key is set" : "Brevo API key is NOT set");
+        
+        console.log(process.env.BREVO_API_KEY);
+
+        console.log(process.env.EMAIL_SENDER_ADDRESS ? "Email sender address is set" : "Email sender address is NOT set");
+        const response = await axios.post(
+            "https://api.brevo.com/v3/smtp/email",
+            {
+                sender: {
+                    name: process.env.EMAIL_SENDER_NAME || "QueueINDIA",
+                    email: process.env.EMAIL_SENDER_ADDRESS,
+                },
+                to: [{ email: to }],
+                subject: subject,
+                htmlContent: isHtml ? content : undefined,
+                textContent: !isHtml ? content : undefined,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-key": process.env.BREVO_API_KEY,
+                },
+            }
+        );
 
         console.log(`✅ Email sent to ${to}`);
-        console.log("Message ID:", info.messageId);
+        console.log("Brevo Message ID:", response.data.messageId);
 
-        return info;
+        return response.data;
+
     } catch (error) {
-        console.error("❌ Brevo Email Error:", error);
-        throw new Error("Email sending failed. Please try again.");
+        console.error(
+            "❌ Brevo API Error:",
+            error.response?.data || error.message
+        );
+
+        throw new Error(
+            error.response?.data?.message || "Email sending failed."
+        );
     }
 };
 
-export default sendEmail;
+export { sendEmail };
