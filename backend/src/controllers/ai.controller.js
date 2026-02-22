@@ -20,8 +20,7 @@ export const askAI = async (req, res) => {
 
     console.log("🤖 Raw Agent Output:", result);
     
-    // The agent should already return natural language text
-    // Just use whatever the agent returns
+    // Just use whatever the agent returns - it should already be natural language
     const finalReply = result.output || "I couldn't process that request. Could you please rephrase?";
     
     console.log("🧠 AI Response:", finalReply);
